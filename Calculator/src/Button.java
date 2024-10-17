@@ -10,7 +10,7 @@ public class Button implements ActionListener{
     public static int counter = 1;
     private JButton jb;
     private JTextField display;
-    private String letters = "", ans, operation, prevOperation;
+    private String letters = "", ans, operation, prevOperation, textDisplayed = "";
     private int result, counterArray  = 0;
     private int [] numbers;
 
@@ -42,9 +42,9 @@ public class Button implements ActionListener{
         // Append the clicked button text to the display
         display.setText(display.getText() + command);
 
-        //Defining the current caracter being displayed
-
+        //Defining the current character being displayed
         operation = ((JButton) e.getSource()).getText();
+        textDisplayed += operation;
 
         //Defining CLEAR button
 
@@ -53,6 +53,13 @@ public class Button implements ActionListener{
             display.setText("");
             letters = "";
             counterArray = 0;
+            return;
+        }
+
+        if(operation.equals("Del")){
+
+            display.setText(textDisplayed.substring(0,textDisplayed.length()-1));
+            return;
         }
 
         if(operation.matches("\\d")){
@@ -97,15 +104,16 @@ public class Button implements ActionListener{
                 }
                 display.setText("" + result);
                 
-                //saving the answer if intended to perform more operations
+                //Saving the answer if intended to perform more operations
 
                 ans = "" + result;
 
                 return;
+
             }else{
 
                 //Saving the latest operation for handling more than two numbers
-                
+
                 prevOperation = operation;
             }
             counterArray++;

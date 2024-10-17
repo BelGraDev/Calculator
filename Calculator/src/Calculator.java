@@ -5,7 +5,7 @@ public class Calculator{
 
     // Declare buttons and display field at the class level
     JTextField display;
-    Button one, two, three, four, five, six, seven, eight, nine, zero, plus, minus, mult, div, equals, clear;
+    Button one, two, three, four, five, six, seven, eight, nine, zero, plus, minus, mult, div, equals, clear, delete;
 
 
     // Constructor
@@ -40,6 +40,8 @@ public class Calculator{
         mult = new Button("x", f, display,50);
         
         clear = new Button("CLR", f, display, 100);
+        delete = new Button("Del", f, display, 100);
+
         zero = new Button("0", f, display,100);
         equals = new Button("=", f, display, 100);
 
