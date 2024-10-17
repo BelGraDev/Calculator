@@ -10,9 +10,9 @@ public class Button implements ActionListener{
     public static int counter = 1;
     private JButton jb;
     private JTextField display;
-    private String letters, ans;
-    private char operation;
-    private int result, a, b;
+    private String letters = "", ans, operation, prevOperation;
+    private int result, counterArray  = 0;
+    private int [] numbers;
 
     public Button(String content, JFrame jf, JTextField jtf, int width){
 
@@ -42,57 +42,73 @@ public class Button implements ActionListener{
         // Append the clicked button text to the display
         display.setText(display.getText() + command);
 
-        if(((JButton) e.getSource()).getText().equals("=")){
+        //Defining the current caracter being displayed
 
-            letters = display.getText();
+        operation = ((JButton) e.getSource()).getText();
 
-            for(int i = 0; i < letters.length(); i++){
-    
-    
-                if(letters.charAt(i) == '+' ||letters.charAt(i) == '-' ||letters.charAt(i) == '*' ||letters.charAt(i) == '/' ){
-    
-                    try {
-    
-                        operation = letters.charAt(i);
-                        String [] elements = letters.split("\\" + operation);
-                        if(elements.length == 2){
-    
-                            a = Integer.parseInt(elements[0].trim());
-                            b = Integer.parseInt(elements[1].trim());
-                            
-                        }
-                        break;
-                    }catch(NumberFormatException nfe){}
-                }
-    
-            }
-            switch (operation) {
-                case '+':
-                    result = a+b;
-                    break;
-                case '-':
-                    result =a-b;
-                    break;
-                case '/':
-                    if(b != 0) result = a/b;
-                    else display.setText("ERROR: division by 0");
-                    break;
-                case '*':
-                    result = a*b;
-                    break;
-                default:
-                    break;
-            }
-            display.setText("" + result);
-            
+        //Defining CLEAR button
 
-            //saving the anwer if intended to perform more operations
-            ans =""+ result;
+        if(operation.equals("CLR")) {
     
-        }else if(((JButton) e.getSource()).getText().equals("CLR")) {
-
             display.setText("");
             letters = "";
+            counterArray = 0;
+        }
+
+        if(operation.matches("\\d")){
+
+            letters += operation;
+        }
+
+        //Making the operations 
+
+        if(operation.equals("+") || operation.equals("-") || operation.equals("x") || operation.equals("/") || operation.equals("=")){
+    
+            if(!letters.isEmpty()) {
+                numbers[counterArray] = Integer.parseInt(letters);
+                letters = "";
+            } else {
+                display.setText("ERROR: Enter a number first");
+                return;  // Exit the method if no valid number has been entered
+            }
+
+            if(operation.equals("=")){
+
+                int a = numbers[0];
+                int b = numbers[1];
+
+                switch (operation) {
+                    case "+":
+                        result = a + b;
+                        break;
+
+                    case "-":
+                        result = a - b;
+                        break;
+
+                    case "/":
+                        if(b != 0) result = a / b;
+                        else display.setText("ERROR: division by 0");
+                        break;
+
+                    case "x":
+                        result = a * b;
+                        break;
+                }
+                display.setText("" + result);
+                
+                //saving the answer if intended to perform more operations
+
+                ans = "" + result;
+
+                return;
+            }else{
+
+                //Saving the latest operation for handling more than two numbers
+                
+                prevOperation = operation;
+            }
+            counterArray++;
         }
     }
 }
