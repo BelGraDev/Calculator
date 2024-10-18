@@ -7,15 +7,15 @@ public class Button implements ActionListener{
 
     private static int x = 0;
     private static int y = 60;
-    public static int counter = 1;
+    public static int counter = 1, counterArray = 0;
+    private static String letters = "", textDisplayed = "", operation;
     private JButton jb;
     private JTextField display;
-    private String letters = "", ans, operation, prevOperation, textDisplayed = "";
-    private int result, counterArray  = 0;
-    private int [] numbers;
+    private String ans; 
+    private double result;
+    private static double [] numbers = new double[10];
 
     public Button(String content, JFrame jf, JTextField jtf, int width){
-
 
         jb = new JButton(content);
         jb.setBounds(x, y, width, this.HEIGHT);
@@ -43,12 +43,13 @@ public class Button implements ActionListener{
         display.setText(display.getText() + command);
 
         //Defining the current character being displayed
-        operation = ((JButton) e.getSource()).getText();
-        textDisplayed += operation;
+
+
+        textDisplayed += command;
 
         //Defining CLEAR button
 
-        if(operation.equals("CLR")) {
+        if(command.equals("CLR")) {
     
             display.setText("");
             letters = "";
@@ -56,33 +57,29 @@ public class Button implements ActionListener{
             return;
         }
 
-        if(operation.equals("Del")){
+        if(command.equals("Del")){
 
-            display.setText(textDisplayed.substring(0,textDisplayed.length()-1));
+            letters = textDisplayed.substring(0,textDisplayed.length()-1);
+            display.setText(letters);
             return;
-        }
-
-        if(operation.matches("\\d")){
-
-            letters += operation;
         }
 
         //Making the operations 
 
-        if(operation.equals("+") || operation.equals("-") || operation.equals("x") || operation.equals("/") || operation.equals("=")){
+        if(command.equals("+") || command.equals("-") || command.equals("x") || command.equals("/") || command.equals("=")){
     
             if(!letters.isEmpty()) {
-                numbers[counterArray] = Integer.parseInt(letters);
+                numbers[counterArray] = Integer.parseInt(letters.trim());
                 letters = "";
             } else {
                 display.setText("ERROR: Enter a number first");
                 return;  // Exit the method if no valid number has been entered
             }
 
-            if(operation.equals("=")){
+            if(command.equals("=")){
 
-                int a = numbers[0];
-                int b = numbers[1];
+                double a = numbers[0];
+                double b = numbers[1];
 
                 switch (operation) {
                     case "+":
@@ -108,15 +105,20 @@ public class Button implements ActionListener{
 
                 ans = "" + result;
 
+                counterArray = 0;
                 return;
+
 
             }else{
 
                 //Saving the latest operation for handling more than two numbers
-
-                prevOperation = operation;
+                operation = command;
+                counterArray++;
             }
-            counterArray++;
+        }else{
+
+            letters += command;
+
         }
     }
 }
