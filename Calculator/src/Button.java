@@ -14,6 +14,7 @@ public class Button implements ActionListener{
     private String ans; 
     private double result;
     private static double [] numbers = new double[10];
+    private boolean delOp;
 
     public Button(String content, JFrame jf, JTextField jtf, int width){
 
@@ -42,26 +43,38 @@ public class Button implements ActionListener{
         // Append the clicked button text to the display
         display.setText(display.getText() + command);
 
-        //Defining the current character being displayed
-
-
-        textDisplayed += command;
-
-        //Defining CLEAR button
+        //Defining CLEAR and DEL buttons
 
         if(command.equals("CLR")) {
     
             display.setText("");
             letters = "";
+            textDisplayed = "";
             counterArray = 0;
             return;
-        }
 
-        if(command.equals("Del")){
+        } else if(command.equals("Del")){
 
-            letters = textDisplayed.substring(0,textDisplayed.length()-1);
-            display.setText(letters);
-            return;
+            if(!textDisplayed.isEmpty()){
+
+                letters = textDisplayed.substring(0,textDisplayed.length()-1);
+
+                if(textDisplayed.charAt(textDisplayed.length()-1) == operation.charAt(0)){
+
+                    delOp = true;
+                    if(delOp){
+                        numbers[--counterArray] = Integer.parseInt(letters);
+                        delOp = false;
+                    }
+                }
+
+                textDisplayed = letters;
+                display.setText(letters);
+                return;
+            }
+
+        }else{
+            textDisplayed += command;
         }
 
         //Making the operations 
