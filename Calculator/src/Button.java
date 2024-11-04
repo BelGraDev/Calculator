@@ -7,7 +7,7 @@ public class Button implements ActionListener{
 
     private static int x = 0;
     private static int y = 60;
-    public static int counter = 1, counterArray = 0;
+    public static int counter = 1, counterArray;
     private static String letters = "", textDisplayed = "", operation, ans;
     private JButton jb;
     private JTextField display;
@@ -40,10 +40,19 @@ public class Button implements ActionListener{
         
         //Clearing the screen in the command that follows the result
         if(resDisplayed){
+            textDisplayed = "";
             display.setText("");
             resDisplayed = false;
         } 
 
+        if(counterArray >= 2){
+
+            letters = "";
+            textDisplayed = "ERROR: More than two operators";
+            display.setText(textDisplayed);
+            counterArray = 0;
+            return;
+        }
         String command = e.getActionCommand();
         // Append the clicked button text to the display
         display.setText(display.getText() + command);
@@ -66,12 +75,12 @@ public class Button implements ActionListener{
                     letters = textDisplayed.substring(0,textDisplayed.length()-1);
                     if(operation == null){
     
-                        numbers[counterArray] = Integer.parseInt(letters);
+                        numbers[counterArray] = Double.parseDouble(letters);
                         display.setText(letters);
     
                     }else if(textDisplayed.charAt(textDisplayed.length()-1) == operation.charAt(0)){
     
-                        numbers[--counterArray] = Integer.parseInt(letters); 
+                        numbers[--counterArray] = Double.parseDouble(letters); 
                     }
     
                     textDisplayed = letters;
@@ -86,12 +95,14 @@ public class Button implements ActionListener{
             }else{
                 display.setText("");
             }
+            return;
 
         }else if(command.equals("ANS")){
             letters += ans;
-            counterArray = 0;
-            numbers[counterArray] = Integer.parseInt(ans);
-            display.setText(ans);
+            textDisplayed += ans;
+            numbers[counterArray] = Double.parseDouble(ans);
+            display.setText(textDisplayed);
+            return;
 
         }else{
             textDisplayed += command;
@@ -102,7 +113,7 @@ public class Button implements ActionListener{
         if(command.equals("+") || command.equals("-") || command.equals("x") || command.equals("/") || command.equals("=")){
     
             if(!letters.isEmpty()) {
-                numbers[counterArray] = Integer.parseInt(letters.trim());
+                numbers[counterArray] = Double.parseDouble(letters.trim());
                 letters = "";
             } else {
                 display.setText("ERROR: Enter a number first");
@@ -112,8 +123,8 @@ public class Button implements ActionListener{
             if(command.equals("=")){
 
                 if(counterArray == 0){
-
-                    display.setText(numbers[counterArray] +"");
+                    result = numbers[counterArray];
+                    display.setText(result + "");
 
                 }else{
                     double a = numbers[0];
