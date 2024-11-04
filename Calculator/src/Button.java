@@ -8,13 +8,12 @@ public class Button implements ActionListener{
     private static int x = 0;
     private static int y = 60;
     public static int counter = 1, counterArray = 0;
-    private static String letters = "", textDisplayed = "", operation;
+    private static String letters = "", textDisplayed = "", operation, ans;
     private JButton jb;
     private JTextField display;
-    private String ans; 
     private double result;
+    private static boolean resDisplayed;
     private static double [] numbers = new double[10];
-    private boolean delOp;
 
     public Button(String content, JFrame jf, JTextField jtf, int width){
 
@@ -39,6 +38,12 @@ public class Button implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         
+        //Clearing the screen in the command that follows the result
+        if(resDisplayed){
+            display.setText("");
+            resDisplayed = false;
+        } 
+
         String command = e.getActionCommand();
         // Append the clicked button text to the display
         display.setText(display.getText() + command);
@@ -57,21 +62,36 @@ public class Button implements ActionListener{
 
             if(!textDisplayed.isEmpty()){
 
-                letters = textDisplayed.substring(0,textDisplayed.length()-1);
-
-                if(textDisplayed.charAt(textDisplayed.length()-1) == operation.charAt(0)){
-
-                    delOp = true;
-                    if(delOp){
-                        numbers[--counterArray] = Integer.parseInt(letters);
-                        delOp = false;
+                if(textDisplayed.length() > 1){
+                    letters = textDisplayed.substring(0,textDisplayed.length()-1);
+                    if(operation == null){
+    
+                        numbers[counterArray] = Integer.parseInt(letters);
+                        display.setText(letters);
+    
+                    }else if(textDisplayed.charAt(textDisplayed.length()-1) == operation.charAt(0)){
+    
+                        numbers[--counterArray] = Integer.parseInt(letters); 
                     }
+    
+                    textDisplayed = letters;
+                    display.setText(letters);
+                    return;
+                }else{
+                    letters = "";
+                    textDisplayed = letters;
+                    display.setText(textDisplayed);
                 }
 
-                textDisplayed = letters;
-                display.setText(letters);
-                return;
+            }else{
+                display.setText("");
             }
+
+        }else if(command.equals("ANS")){
+            letters += ans;
+            counterArray = 0;
+            numbers[counterArray] = Integer.parseInt(ans);
+            display.setText(ans);
 
         }else{
             textDisplayed += command;
@@ -91,36 +111,42 @@ public class Button implements ActionListener{
 
             if(command.equals("=")){
 
-                double a = numbers[0];
-                double b = numbers[1];
+                if(counterArray == 0){
 
-                switch (operation) {
-                    case "+":
-                        result = a + b;
-                        break;
+                    display.setText(numbers[counterArray] +"");
 
-                    case "-":
-                        result = a - b;
-                        break;
+                }else{
+                    double a = numbers[0];
+                    double b = numbers[1];
+    
+                    switch (operation) {
+                        case "+":
+                            result = a + b;
+                            break;
+    
+                        case "-":
+                            result = a - b;
+                            break;
+    
+                        case "/":
+                            if(b != 0) result = a / b;
+                            else display.setText("ERROR: division by 0");
+                            break;
 
-                    case "/":
-                        if(b != 0) result = a / b;
-                        else display.setText("ERROR: division by 0");
-                        break;
+    
+                        case "x":
+                            result = a * b;
+                            break;
+                    }
+                    display.setText("" + result);
 
-                    case "x":
-                        result = a * b;
-                        break;
                 }
-                display.setText("" + result);
-                
+
                 //Saving the answer if intended to perform more operations
-
                 ans = "" + result;
-
                 counterArray = 0;
-                return;
-
+                resDisplayed = true;
+                
 
             }else{
 
