@@ -1,4 +1,6 @@
 import javax.swing.*;
+
+import java.awt.Color;
 import java.awt.event.*;
 
 public class Button implements ActionListener{
@@ -15,7 +17,7 @@ public class Button implements ActionListener{
     private static boolean resDisplayed;
     private static double [] numbers = new double[10];
 
-    public Button(String content, JFrame jf, JTextField jtf, int width){
+    public Button(String content, JFrame jf, JTextField jtf, int width, String type){
 
         jb = new JButton(content);
         jb.setBounds(x, y, width, this.HEIGHT);
@@ -33,6 +35,16 @@ public class Button implements ActionListener{
 
         }
         counter++;
+
+        if(type.equals("number")) jb.setBackground(Color.ORANGE);
+        else if(type.equals("operator")){
+            jb.setBackground(Color.BLACK);
+            jb.setForeground(Color.WHITE);
+        }else if(type.equals("command")){
+            jb.setBackground(Color.darkGray);
+            jb.setForeground(Color.WHITE);
+        }
+        else if(type.equals("equals")) jb.setBackground(Color.LIGHT_GRAY);
     }
 
     @Override
